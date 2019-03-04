@@ -35,12 +35,36 @@
                     </a>
                 </div>
                 <div class="card-body">
-                    <p class="text-center py-2">SIGNUP TO GET INSTANT ACCESS.</p>
+                    <p class="text-center py-2">SETUP YOUR FARM.</p>
                     <form class="mb-3" id="registerForm" novalidate>
                         <div class="form-group">
-                            <label class="text-muted" for="signupInputEmail1">Email address</label>
+                            <label class="text-muted" for="first_name">First Name</label>
                             <div class="input-group with-focus">
-                                <input class="form-control border-right-0" id="signupInputEmail1" type="email"
+                                <input class="form-control border-right-0" id="first_name" name="first_name" type="text"
+                                    placeholder="First name" autocomplete="off" required>
+                                <div class="input-group-append">
+                                    <span class="input-group-text text-muted bg-transparent border-left-0">
+                                        <em class="fa fa-user"></em>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-muted" for="first_name">Last Name</label>
+                            <div class="input-group with-focus">
+                                <input class="form-control border-right-0" id="last_name" name="last_name" type="text"
+                                    placeholder="Last name" autocomplete="off" required>
+                                <div class="input-group-append">
+                                    <span class="input-group-text text-muted bg-transparent border-left-0">
+                                        <em class="fa fa-user"></em>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-muted" for="email">Email address</label>
+                            <div class="input-group with-focus">
+                                <input class="form-control border-right-0" id="email" name="email" type="email"
                                     placeholder="Enter email" autocomplete="off" required>
                                 <div class="input-group-append">
                                     <span class="input-group-text text-muted bg-transparent border-left-0">
@@ -50,10 +74,22 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="text-muted" for="email">Phone Number</label>
+                            <div class="input-group with-focus">
+                                <input class="form-control border-right-0" id="phone" name="phone" type="number"
+                                    placeholder="Enter phone number" autocomplete="off" required>
+                                <div class="input-group-append">
+                                    <span class="input-group-text text-muted bg-transparent border-left-0">
+                                        <em class="fa fa-mobile"></em>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="text-muted" for="signupInputPassword1">Password</label>
                             <div class="input-group with-focus">
-                                <input class="form-control border-right-0" id="signupInputPassword1" type="password"
-                                    placeholder="Password" autocomplete="off" required>
+                                <input class="form-control border-right-0" id="signupInputPassword1" name="password1"
+                                    type="password" placeholder="Password" autocomplete="off" required>
                                 <div class="input-group-append">
                                     <span class="input-group-text text-muted bg-transparent border-left-0">
                                         <em class="fa fa-lock"></em>
@@ -64,8 +100,8 @@
                         <div class="form-group">
                             <label class="text-muted" for="signupInputRePassword1">Retype Password</label>
                             <div class="input-group with-focus">
-                                <input class="form-control border-right-0" id="signupInputRePassword1" type="password"
-                                    placeholder="Retype Password" autocomplete="off" required
+                                <input class="form-control border-right-0" id="signupInputRePassword1" name="password2"
+                                    type="password" placeholder="Retype Password" autocomplete="off" required
                                     data-parsley-equalto="#signupInputPassword1">
                                 <div class="input-group-append">
                                     <span class="input-group-text text-muted bg-transparent border-left-0">
@@ -84,17 +120,17 @@
                         <button class="btn btn-block btn-primary mt-3" type="submit">Create account</button>
                     </form>
                     <p class="pt-3 text-center">Have an account?</p>
-                    <a class="btn btn-block btn-secondary" href="login.html">Signup</a>
+                    <a class="btn btn-block btn-secondary" href="/">Login</a>
                 </div>
             </div>
             <!-- END card-->
             <div class="p-3 text-center">
                 <span class="mr-2">&copy;</span>
-                <span>2018</span>
+                <span>2019</span>
                 <span class="mr-2">-</span>
-                <span>Angle</span>
+                <span>Thohiru Omoloye</span>
                 <br>
-                <span>Bootstrap Admin Template</span>
+                <span>Griffith College Dublin</span>
             </div>
         </div>
     </div>

@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+{% block body %}
+
+<!-- START card-->
+<div class="card card-default">
+    <div class="card-header"> Inline form</div>
+    <div class="card-body">
+        <form>
+            <div class="form-row align-items-center">
+                <div class="col-auto">
+                    <label class="sr-only" for="inlineFormInput">Name</label>
+                    <input class="form-control mb-2" id="inlineFormInput" type="text" placeholder="Jane Doe">
+                </div>
+                <div class="col-auto">
+                    <label class="sr-only" for="inlineFormInputGroup">Username</label>
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">@</div>
+                        </div>
+                        <input class="form-control" id="inlineFormInputGroup" type="text" placeholder="Username">
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" id="autoSizingCheck" type="checkbox">
+                        <label class="form-check-label" for="autoSizingCheck">Remember me</label>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-primary mb-2" type="submit">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- END card-->
+
+{% endblock %}
