@@ -2,7 +2,6 @@ import os
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from classes.farm import Farm
 import psycopg2
-from config import config
 
 app = Flask(__name__, static_url_path=os.getcwd() + 'templates/vendor')
 app.config.from_object(os.environ['APP_SETTINGS'])
@@ -13,12 +12,9 @@ def connect():
     """ Connect to the PostgreSQL database server """
     conn = None
     try:
-        # read connection parameters
-        params = config()
-
         # connect to the PostgreSQL server
         print('Connecting to the PostgreSQL database...')
-        return psycopg2.connect(**params)
+        return psycopg2.connect(os.environ['DATABASE_URL'])
 
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
@@ -29,21 +25,7 @@ def connect():
 
 
 @app.route('/setup')
-def home():
-    conn = connect()
-    # create a cursor
-    cur = conn.cursor()
-
-    # execute a statement
-    print('PostgreSQL database version:')
-    cur.execute('SELECT version()')
-
-    # display the PostgreSQL database server version
-    db_version = cur.fetchone()
-    print(db_version)
-
-    # close connection
-    conn.close()
+def setup():
     return render_template("setup.html")
 
 
@@ -61,6 +43,22 @@ def about():
 def test():
     page_title = "Page title"
     page_desc = "Page desc"
+
+    conn = connect()
+    # create a cursor
+    cur = conn.cursor()
+
+    # execute a statement
+    print('PostgreSQL database version:')
+    cur.execute('SELECT version()')
+
+    # display the PostgreSQL database server version
+    db_version = cur.fetchone()
+    page_desc = db_version
+    print(db_version)
+
+    # close connection
+    conn.close()
 
     return render_template("test.html", **locals())
 
