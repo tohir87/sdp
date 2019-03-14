@@ -21,6 +21,7 @@ class StagingConfig(Config):
 class DevelopmentConfig(Config):
     DEVELOPMENT = True
     DEBUG = True
+    DATABASE_URL = "localhost"
 
 
 class TestingConfig(Config):
