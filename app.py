@@ -1,3 +1,5 @@
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 import os
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from classes.farm import Farm
@@ -6,6 +8,20 @@ import psycopg2
 app = Flask(__name__, static_url_path=os.getcwd() + 'templates/vendor')
 app.config.from_object(os.environ['APP_SETTINGS'])
 print(os.environ['APP_SETTINGS'])
+
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(128))
+    last_name = db.Column(db.String(128))
+    email = db.Column(db.String(128))
+    phone = db.Column(db.String(128))
+    password = db.Column(db.String(128))
 
 
 def connect():
