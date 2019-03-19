@@ -98,5 +98,14 @@ def settings():
     return render_template("settings.html", **locals())
 
 
+@app.route('/report')
+def report():
+
+    page_title = "Report"
+    page_desc = "Temperature Report over time"
+
+    return render_template("plot.html", **locals())
+
+
 if __name__ == '__main__':
     app.run()
