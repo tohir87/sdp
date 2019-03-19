@@ -89,5 +89,14 @@ def doSetup():
     # complete setup process
 
 
+@app.route('/settings')
+def settings():
+
+    page_title = "Settings"
+    page_desc = "Available settings"
+
+    return render_template("settings.html", **locals())
+
+
 if __name__ == '__main__':
     app.run()
