@@ -26,6 +26,16 @@ class User(db.Model):
     password = db.Column(db.String(128))
 
 
+class DhtData(db.Model):
+    __tablename__ = "dht_sensor_readings"
+
+    id = db.Column(db.Integer, primary_key=True)
+    reading_date = db.Column(db.Date())
+    reading_time = db.Column(db.Time())
+    temperature = db.Column(db.String(128))
+    humidity = db.Column(db.String(128))
+
+
 def connect():
     """ Connect to the PostgreSQL database server """
     conn = None
