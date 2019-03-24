@@ -93,12 +93,13 @@ def test():
 
 @app.route('/doSetUp', methods=['POST'])
 def doSetup():
-    # get submitted form inputs
-    farm = Farm(request.form)
-    print("response")
-    print(farm.signUp())
+    # Initialise the Farm class and pass submitted form inputs across
+    farm = Farm(request.form,  connect())
+    # Complete signup
+    farm.signUp()
 
-    # complete setup process
+    # redirect to login page
+    return redirect(url_for('login'))
 
 
 @app.route('/settings')
