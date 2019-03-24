@@ -2,6 +2,8 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 import os
 from flask import Flask, render_template, jsonify, request, redirect, url_for
+from flask_restful import Resource, Api
+import datetime
 from classes.farm import Farm
 import psycopg2
 
@@ -50,6 +52,20 @@ def connect():
         if conn is not None:
             conn.close()
             print('Database connection closed.')
+
+
+@app.route('/api/post_reading', methods=["POST", "GET"])
+def post_reading():
+
+    # create a database connection
+    conn = connect()
+    with conn:
+        print("posting data from sensor")
+        farm = Farm(request.args, conn)
+        # Complete signup
+        farm.saveSensorData()
+
+    return "Ok"
 
 
 @app.route('/setup')
