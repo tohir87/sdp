@@ -38,6 +38,16 @@ class DhtData(db.Model):
     humidity = db.Column(db.String(128))
 
 
+class Settings(db.Model):
+    __tablename__ = "settings"
+
+    id = db.Column(db.Integer, primary_key=True)
+    min_temperature = db.Column(db.Integer)
+    max_temperature = db.Column(db.Integer)
+    emergency_email = db.Column(db.String(128))
+    emergency_phone = db.Column(db.String(128))
+
+
 def connect():
     """ Connect to the PostgreSQL database server """
     conn = None
@@ -118,11 +128,41 @@ def doSetup():
     return redirect(url_for('login'))
 
 
+@app.route('/processSettings', methods=['POST'])
+def processSettings():
+    # Initialise the Farm class and pass submitted form inputs across
+    farm = Farm(request.form,  connect())
+    # Complete signup
+    farm.saveSettings()
+
+    # redirect back to settings page
+    return redirect(url_for('settings'))
+
+
 @app.route('/settings')
 def settings():
 
     page_title = "Settings"
     page_desc = "Available settings"
+
+    max_temp = 0
+    min_temp = 0
+    emergency_email = ""
+    emergency_phone = ""
+
+    # Create connection
+    conn = connect()
+    with conn:
+        print("Getting the previous setting")
+        farm = Farm([],  conn)
+        # Complete signup
+        previousSetting = farm.getSetting()
+
+        if previousSetting:
+            min_temp = previousSetting[0][1]
+            max_temp = previousSetting[0][2]
+            emergency_email = previousSetting[0][3]
+            emergency_phone = previousSetting[0][4]
 
     return render_template("settings.html", **locals())
 

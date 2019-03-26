@@ -34,3 +34,23 @@ class Farm:
             temperature, humidity])
 
         return self.conn.commit()
+
+    def saveSettings(self):
+        # delete previous setting
+        self.cur.execute('DELETE FROM settings')
+
+        # Grab form entries
+        min_temperature = self.param['min_temperature']
+        max_temperature = self.param['max_temperature']
+        emergency_email = self.param['emergency_email']
+        emergency_phone = self.param['emergency_phone']
+
+        # Insert new settings
+        self.cur.execute("INSERT INTO settings (min_temperature, max_temperature, emergency_email, emergency_phone) VALUES (%s, %s, %s, %s)", [
+                         min_temperature, max_temperature, emergency_email, emergency_phone])
+
+        return self.conn.commit()
+
+    def getSetting(self):
+        self.cur.execute("SELECT * FROM settings ORDER BY id DESC LIMIT 1")
+        return self.cur.fetchall()

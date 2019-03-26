@@ -11,37 +11,47 @@
                     <table class="table">
                         <tr>
                             <td>Min. Temperature</td>
-                            <td>0 deg</td>
+                            <td>{{min_temp}} deg</td>
                         </tr>
                         <tr>
                             <td>Max. Temperature</td>
-                            <td>0 deg</td>
+                            <td>{{max_temp}} deg</td>
                         </tr>
                         <tr>
                             <th colspan="2">Emergency Contacts</th>
                         </tr>
                         <tr>
                             <td>Email</td>
-                            <td>yourname@domain.com</td>
+                            <td>{{emergency_email}}</td>
                         </tr>
                         <tr>
                             <td>Phone</td>
-                            <td>012345678</td>
+                            <td>{{emergency_phone}}</td>
                         </tr>
                     </table>
                 </div>
             </div>
             <div class="col-lg-6">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label class="sr-only" for="max_temperature">Max. Temperature</label>
-                        <input required class="form-control mb-2" id="max_temperature" name="max_temperature"
-                            type="number" min="0" placeholder="Max Temperature">
-                    </div>
+                <form class="form-horizontal" method="POST" action="/processSettings">
                     <div class="form-group">
                         <label class="sr-only" for="min_temperature">Min. Temperature</label>
                         <input required class="form-control mb-2" id="min_temperature" name="min_temperature"
-                            type="number" min="0" placeholder="Min Temperature">
+                            type="number" min="0" placeholder="Min Temperature" value="{{min_temp}}">
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="max_temperature">Max. Temperature</label>
+                        <input required class="form-control mb-2" id="max_temperature" name="max_temperature"
+                            type="number" min="0" placeholder="Max Temperature" value="{{max_temp}}">
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="emergency_email">Emergency Email</label>
+                        <input required class="form-control mb-2" id="emergency_email" name="emergency_email"
+                            type="email" placeholder="Emergency Email" value="{{emergency_email}}">
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="emergency_phone">Emergency Phone</label>
+                        <input required class="form-control mb-2" id="emergency_phone" name="emergency_phone"
+                            type="text" placeholder="Emergency Phone" value="{{emergency_phone}}">
                     </div>
                     <div class="form-group">
 
