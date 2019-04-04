@@ -8,6 +8,14 @@ class Farm:
         # create a cursor
         self.cur = conn.cursor()
 
+    def login(self):
+        email = self.param['email']
+        password = self.param['password']
+
+        self.cur.execute(
+            'SELECT * FROM users WHERE email = %s and password = %s', [email, password])
+        return self.cur.fetchall()
+
     def signUp(self):
         first_name = self.param['first_name']
         last_name = self.param['last_name']

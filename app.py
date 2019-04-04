@@ -128,6 +128,23 @@ def doSetup():
     return redirect(url_for('login'))
 
 
+@app.route('/doLogin', methods=['POST'])
+def doLogin():
+    # Initialise the Farm class and pass submitted form inputs across
+    farm = Farm(request.form,  connect())
+    # Complete signup
+    hasAccount = farm.login()
+
+    print(len(hasAccount))
+
+    return_route = "login"
+    if (len(hasAccount) > 0):
+        return_route = "settings"
+
+    # redirect to needed page
+    return redirect(url_for(return_route))
+
+
 @app.route('/processSettings', methods=['POST'])
 def processSettings():
     # Initialise the Farm class and pass submitted form inputs across

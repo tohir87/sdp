@@ -37,11 +37,11 @@
                 </div>
                 <div class="card-body">
                     <p class="text-center py-2">SIGN IN TO CONTINUE.</p>
-                    <form class="mb-3" id="loginForm" method="POST" novalidate>
+                    <form class="mb-3" id="loginForm" method="POST" action="/doLogin" novalidate>
                         <div class="form-group">
                             <div class="input-group with-focus">
                                 <input class="form-control border-right-0" id="exampleInputEmail1" type="email"
-                                    placeholder="Enter email" autocomplete="off" required>
+                                    name="email" placeholder="Enter email" autocomplete="off" required>
                                 <div class="input-group-append">
                                     <span class="input-group-text text-muted bg-transparent border-left-0">
                                         <em class="fa fa-envelope"></em>
@@ -52,7 +52,7 @@
                         <div class="form-group">
                             <div class="input-group with-focus">
                                 <input class="form-control border-right-0" id="exampleInputPassword1" type="password"
-                                    placeholder="Password" required>
+                                    placeholder="Password" name="password" required>
                                 <div class="input-group-append">
                                     <span class="input-group-text text-muted bg-transparent border-left-0">
                                         <em class="fa fa-lock"></em>
