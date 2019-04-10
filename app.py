@@ -38,6 +38,15 @@ class DhtData(db.Model):
     humidity = db.Column(db.String(128))
 
 
+class WeightData(db.Model):
+    __tablename__ = "weight_sensor_readings"
+
+    id = db.Column(db.Integer, primary_key=True)
+    reading_date = db.Column(db.Date())
+    reading_time = db.Column(db.Time())
+    weight = db.Column(db.String(128))
+
+
 class Settings(db.Model):
     __tablename__ = "settings"
 
@@ -74,6 +83,20 @@ def post_reading():
         farm = Farm(request.args, conn)
         # Complete signup
         farm.saveSensorData()
+
+    return "Ok"
+
+
+@app.route('/api/post_feed_weight', methods=["POST", "GET"])
+def post_feed_weight():
+
+    # create a database connection
+    conn = connect()
+    with conn:
+        print("posting data from weight sensor")
+        farm = Farm(request.args, conn)
+        # Complete signup
+        farm.saveFeedQuantity()
 
     return "Ok"
 

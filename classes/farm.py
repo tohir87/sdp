@@ -43,6 +43,17 @@ class Farm:
 
         return self.conn.commit()
 
+    def saveFeedQuantity(self):
+        weight = self.param['weight']
+
+        print(weight)
+
+        # insert new record inside feed weight table
+        self.cur.execute("INSERT INTO weight_sensor_readings (reading_date, reading_time, weight) VALUES (date('now'), now()::time ,%s)", [
+            weight])
+
+        return self.conn.commit()
+
     def saveSettings(self):
         # delete previous setting
         self.cur.execute('DELETE FROM settings')
