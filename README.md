@@ -13,6 +13,10 @@ final year project
 
 
 #### Run Migration
-`python manage.py db migrate -m "added emergency contact to settings"
+`python manage.py db migrate -m "commit message"
 `python manage.py db upgrade
+`
+
+#### Run Migration on Heroku
+`heroku run python manage.py db upgrade
 `
