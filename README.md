@@ -10,3 +10,9 @@ final year project
 #### Heroku Settings - Production
 `heroku config:set APP_SETTINGS=config.ProductionConfig --remote pro
 `
+
+
+#### Run Migration
+`python manage.py db migrate -m "added emergency contact to settings"
+`python manage.py db upgrade
+`
