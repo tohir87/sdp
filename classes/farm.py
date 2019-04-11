@@ -73,3 +73,13 @@ class Farm:
     def getSetting(self):
         self.cur.execute("SELECT * FROM settings ORDER BY id DESC LIMIT 1")
         return self.cur.fetchall()
+
+    def getDHTReading(self):
+        self.cur.execute(
+            "SELECT * FROM dht_sensor_readings ORDER BY id DESC LIMIT 50")
+        return self.cur.fetchall()
+
+    def getFeedReading(self):
+        self.cur.execute(
+            "SELECT * FROM weight_sensor_readings ORDER BY id DESC LIMIT 50")
+        return self.cur.fetchall()

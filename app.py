@@ -195,7 +195,7 @@ def settings():
     with conn:
         print("Getting the previous setting")
         farm = Farm([],  conn)
-        # Complete signup
+        # Get settings
         previousSetting = farm.getSetting()
 
         if previousSetting:
@@ -211,9 +211,43 @@ def settings():
 def report():
 
     page_title = "Report"
-    page_desc = "Temperature Report over time"
+    page_desc = "Temperature, humidity, feed and water level report over time"
 
-    return render_template("plot.html", **locals())
+    # dht_data = []
+    # feed_data = []
+
+    # Create connection
+    conn = connect()
+    with conn:
+        print("Getting the sensor readings")
+        farm = Farm([],  conn)
+        # Get readings
+        dht_data = farm.getDHTReading()
+        print(dht_data)
+        feed_data = farm.getFeedReading()
+        print(feed_data)
+
+    return render_template("report.html", **locals())
+
+
+@app.route('/analytics')
+def analytics():
+
+    page_title = "Report"
+    page_desc = "Analytics"
+
+    # Create connection
+    conn = connect()
+    with conn:
+        print("Getting the sensor readings")
+        farm = Farm([],  conn)
+        # Get readings
+        dht_data = farm.getDHTReading()
+        print(dht_data)
+        feed_data = farm.getFeedReading()
+        print(feed_data)
+
+    return render_template("analytics.html", **locals())
 
 
 if __name__ == '__main__':
