@@ -7,7 +7,8 @@ import datetime
 from classes.farm import Farm
 import psycopg2
 
-app = Flask(__name__, static_url_path=os.getcwd() + 'static/vendor')
+app = Flask(__name__)
+# app = Flask(__name__, static_url_path=os.getcwd() + 'static/vendor1')
 app.config.from_object(os.environ['APP_SETTINGS'])
 print(os.environ['APP_SETTINGS'])
 
