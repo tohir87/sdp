@@ -88,6 +88,33 @@ def post_reading():
     return "Ok"
 
 
+@app.route('/api/get_temp_humid', methods=["GET", "POST"])
+def get_temp_humid():
+
+    # get url params
+    startDate = request.args.get('start_date')
+    endDate = request.args.get('end_date')
+
+    temp = []
+    humid = []
+    dates = []
+
+    # create a database connection
+    conn = connect()
+    with conn:
+        print("2. Query all temps")
+        farm = Farm(request.args, conn)
+        dht_data = farm.getTempHumidData()
+
+        # build data
+        for row in dht_data:
+            temp.append(row[3])
+            humid.append(row[4])
+            dates.append(row[1])
+
+    return jsonify({'temperature': temp, 'humidity': humid, 'categories': dates})
+
+
 @app.route('/api/post_feed_weight', methods=["POST", "GET"])
 def post_feed_weight():
 

@@ -83,3 +83,12 @@ class Farm:
         self.cur.execute(
             "SELECT * FROM weight_sensor_readings ORDER BY id DESC LIMIT 50")
         return self.cur.fetchall()
+
+    def getTempHumidData(self):
+        start_date = self.param['start_date']
+        end_date = self.param['end_date']
+
+        self.cur.execute(
+            "SELECT * FROM dht_sensor_readings WHERE reading_date >= %s and reading_date <= %s", [
+                start_date, end_date])
+        return self.cur.fetchall()

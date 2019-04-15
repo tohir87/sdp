@@ -18,21 +18,39 @@
                     </ul>
                     <!-- Tab panes-->
                     <div class="tab-content">
-                        <form>
+                        <form id="frm_filter">
+
                             <div class="form-row align-items-center">
                                 <div class="col-auto">
                                     <label class="sr-only" for="start_date">Start Date</label>
-                                    <input class="form-control mb-2" id="start_date" type="date"
-                                        placeholder="dd/mm/YYY">
+                                    <div class="input-group">
+                                        <input class="form-control datepicker" type="text" id="start_date"
+                                            placeholder="Start Date" aria-label="start_date"
+                                            aria-describedby="start_date">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="start_date">
+                                                <i class="fas fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="col-auto">
                                     <label class="sr-only" for="end_date">End Date</label>
-                                    <input class="form-control mb-2" id="end_date" type="date" placeholder="dd/mm/YYY">
+                                    <div class="input-group">
+                                        <input class="form-control datepicker" type="text" id="end_date"
+                                            placeholder="End Date" aria-label="start_date" aria-describedby="end_date">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="start_date">
+                                                <i class="fas fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="col-auto">
-                                    <button class="btn btn-warning mb-2" type="submit"> <i class="fas fa-search"></i>
+                                    <button id="btn_filter" class="btn btn-warning mb-2" type="button"> <i
+                                            class="fas fa-search"></i>
                                         Filter</button>
                                 </div>
                             </div>
