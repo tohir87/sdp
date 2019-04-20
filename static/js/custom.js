@@ -16,24 +16,8 @@ function getReport(startDate_, endDate_) {
     console.log(startDate_, endDate_);
     let url = "/api/get_temp_humid?start_date=" + startDate_ + "&end_date=" + endDate_;
 
-    $.get(url, function (err, data) {
-        console.log(err, data)
-    });
-}
-
-$("#btn_filter").click(function () {
-    var start_date = $("#start_date").val();
-    var end_date = $("#end_date").val();
-
-    getReport(start_date, end_date);
-
-});
-
-function plot(start_date_, end_date_) {
-    let url = "/api/get_temp_humid?start_date=" + start_date_ + "&end_date=" + end_date_;
-    console.log("Api Url:", url);
-
-    $.get(url, function (data) {
+    $.get(url, function (data, status) {
+        console.log(data, status);
         Highcharts.chart('container', {
             chart: {
                 type: 'line'
@@ -79,6 +63,25 @@ function plot(start_date_, end_date_) {
                 data: data.humidity
             }]
         });
+    });
+}
+
+$("#btn_filter").click(function () {
+    var start_date = $("#start_date").val();
+    var end_date = $("#end_date").val();
+
+    getReport(start_date, end_date);
+
+});
+
+function plot(start_date_, end_date_) {
+    let url = "/api/get_temp_humid?start_date=" + start_date_ + "&end_date=" + end_date_;
+    console.log("Api Url:", url);
+
+    $.get(url, function (data) {
+        console.log(data.temperature);
+
+
     });
 
 }
