@@ -1,3 +1,7 @@
 .logo {
     width: 85px
 }
+
+.datepicker {
+    cursor: pointer;
+}

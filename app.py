@@ -1,14 +1,13 @@
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 import os
-from flask import Flask, render_template, jsonify, request, redirect, url_for
+from flask import Flask, session, escape, render_template, jsonify, request, redirect, url_for, abort
 from flask_restful import Resource, Api
 import datetime
 from classes.farm import Farm
 import psycopg2
 
 app = Flask(__name__)
-# app = Flask(__name__, static_url_path=os.getcwd() + 'static/vendor1')
 app.config.from_object(os.environ['APP_SETTINGS'])
 print(os.environ['APP_SETTINGS'])
 
@@ -139,6 +138,18 @@ def login():
     return render_template("login.html")
 
 
+@app.route('/logout')
+def logout():
+    # destroy session
+    session.pop('id', None)
+    session.pop('first_name', None)
+    session.pop('last_name', None)
+    session.pop('email', None)
+    session.pop('phone', None)
+
+    return redirect(url_for('login'))
+
+
 @app.route('/about')
 def about():
     return jsonify({'name': "Thohiru Omoloye", 'student No.': "2950574"})
@@ -184,13 +195,21 @@ def doLogin():
     # Initialise the Farm class and pass submitted form inputs across
     farm = Farm(request.form,  connect())
     # Complete signup
-    hasAccount = farm.login()
+    userInfo = farm.login()
 
-    print(len(hasAccount))
+    print(userInfo)
 
     return_route = "login"
-    if (len(hasAccount) > 0):
+    if (len(userInfo) > 0):
+        # Set session vars
+        session['id'] = userInfo[0][1]
+        session['first_name'] = userInfo[0][2]
+        session['last_name'] = userInfo[0][3]
+        session['email'] = userInfo[0][4]
+        session['phone'] = userInfo[0][5]
         return_route = "settings"
+    else:
+        abort(401)
 
     # redirect to needed page
     return redirect(url_for(return_route))
@@ -279,4 +298,8 @@ def analytics():
 
 
 if __name__ == '__main__':
+    app.config['SESSION_TYPE'] = 'filesystem'
+    app.secret_key = os.urandom(24)
+
+    # sess.init_app(app)
     app.run()
