@@ -108,7 +108,7 @@ def get_temp_humid():
         # build data
         for row in dht_data:
             temp.append(float(row[3]))
-            humid.append(ifloatnt(row[4]))
+            humid.append(float(row[4]))
             dates.append(row[1])
 
     return jsonify({'temperature': temp, 'humidity': humid, 'categories': dates})
