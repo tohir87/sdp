@@ -19,7 +19,7 @@
                             </div>
                             <!-- Name and Job-->
                             <div class="user-block-info">
-                                <span class="user-block-name">Hello, Mike</span>
+                                <span class="user-block-name">Hello, {{session['first_name']}}</span>
                                 <span class="user-block-role">Farmer</span>
                             </div>
                         </div>
@@ -58,8 +58,11 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-heading ">
-                    <span data-localize="sidebar.heading.COMPONENTS">Components</span>
+                <li class=" ">
+                    <a href="/logout" title="Logout">
+                        <em class="fas fa-sign-out-alt"></em>
+                        <span>Logout</span>
+                    </a>
                 </li>
             </ul>
             <!-- END sidebar nav-->

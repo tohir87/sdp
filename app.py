@@ -6,6 +6,7 @@ from flask_restful import Resource, Api
 import datetime
 from classes.farm import Farm
 import psycopg2
+from flask_login import current_user, LoginManager, login_user
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
@@ -71,6 +72,14 @@ def connect():
         if conn is not None:
             conn.close()
             print('Database connection closed.')
+
+
+def checkLogin():
+    if current_user.is_authenticated:
+        print("Session is active")
+    else:
+        print("Session has expired")
+        return render_template("login.html")
 
 
 @app.route('/api/post_reading', methods=["POST", "GET"])
@@ -152,7 +161,13 @@ def logout():
 
 @app.route('/about')
 def about():
-    return jsonify({'name': "Thohiru Omoloye", 'student No.': "2950574"})
+    return jsonify({
+        'name': "Thohiru Omoloye",
+        'student No.': "2950574",
+        'email': "thohiru.omoloye@student.griffith.ie",
+        'level': "Year 4",
+        'course': "Computing Science"
+    })
 
 
 @app.route('/test')
@@ -207,6 +222,7 @@ def doLogin():
         session['last_name'] = userInfo[0][3]
         session['email'] = userInfo[0][4]
         session['phone'] = userInfo[0][5]
+        session['logged_in'] = True
         return_route = "settings"
     else:
         abort(401)
@@ -228,6 +244,8 @@ def processSettings():
 
 @app.route('/settings')
 def settings():
+
+    checkLogin()
 
     page_title = "Settings"
     page_desc = "Available settings"
@@ -277,6 +295,14 @@ def report():
     return render_template("report.html", **locals())
 
 
+@app.route('/home')
+def home():
+    page_title = "Home"
+    page_desc = "Welcome " + session['first_name']
+
+    return render_template("home.html", **locals())
+
+
 @app.route('/analytics')
 def analytics():
 
@@ -300,6 +326,10 @@ def analytics():
 if __name__ == '__main__':
     app.config['SESSION_TYPE'] = 'filesystem'
     app.secret_key = os.urandom(24)
+
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+    login_manager.login_view = 'login'
 
     # sess.init_app(app)
     app.run()
