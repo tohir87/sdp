@@ -295,7 +295,7 @@ def createAlert():
 @app.route('/settings')
 def settings():
 
-    checkLogin()
+    # checkLogin()
 
     page_title = "Settings"
     page_desc = "Available settings"
