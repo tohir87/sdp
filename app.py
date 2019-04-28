@@ -7,10 +7,14 @@ import datetime
 from classes.farm import Farm
 import psycopg2
 from flask_login import current_user, LoginManager, login_user
+from flask_mail import Mail, Message
 
 app = Flask(__name__)
+# Init mail
+mail = Mail(app)
 app.config.from_object(os.environ['APP_SETTINGS'])
 print(os.environ['APP_SETTINGS'])
+mail = Mail(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 
@@ -170,6 +174,15 @@ def about():
     })
 
 
+@app.route('/test_mail')
+def testMail():
+    msg = Message('Hello', sender='bot@smartfarm.com',
+                  recipients=['otcleantech@gmail.com'])
+    msg.body = "Hello, this is just a test email"
+    mail.send(msg)
+    return "Sent"
+
+
 @app.route('/test')
 def test():
     page_title = "Page title"
@@ -207,6 +220,8 @@ def doSetup():
 
 @app.route('/doLogin', methods=['POST'])
 def doLogin():
+    error = None
+
     # Initialise the Farm class and pass submitted form inputs across
     farm = Farm(request.form,  connect())
     # Complete signup
@@ -214,7 +229,6 @@ def doLogin():
 
     print(userInfo)
 
-    return_route = "login"
     if (len(userInfo) > 0):
         # Set session vars
         session['id'] = userInfo[0][1]
@@ -223,12 +237,11 @@ def doLogin():
         session['email'] = userInfo[0][4]
         session['phone'] = userInfo[0][5]
         session['logged_in'] = True
-        return_route = "settings"
+        # redirect to needed page
+        return redirect(url_for('settings'))
     else:
-        abort(401)
-
-    # redirect to needed page
-    return redirect(url_for(return_route))
+        error = 'Invalid email or password. Please try again'
+    return render_template("login.html", error=error)
 
 
 @app.route('/processSettings', methods=['POST'])
