@@ -92,3 +92,24 @@ class Farm:
             "SELECT * FROM dht_sensor_readings WHERE reading_date >= %s and reading_date <= %s", [
                 start_date, end_date])
         return self.cur.fetchall()
+
+    def fetchAlerts(self):
+        self.cur.execute(
+            "SELECT * FROM alerts")
+        return self.cur.fetchall()
+
+    def fetchRules(self):
+        self.cur.execute(
+            "SELECT * FROM rules")
+        return self.cur.fetchall()
+
+    def createAlert(self):
+        # Grab form entries
+        tag = self.param['tag']
+        message = self.param['message']
+
+        # Insert new settings
+        self.cur.execute("INSERT INTO alerts (tag_name, message) VALUES (%s, %s)", [
+                         tag, message])
+
+        return self.conn.commit()

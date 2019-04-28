@@ -1,0 +1,34 @@
+<!-- Modal-->
+<div class="modal fade" id="newAlert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">New Alert</h4>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form class="form-horizontal" method="POST" action="/createAlert">
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label class="col-xl-3 col-form-label">Tag:</label>
+                        <div class="col-xl-9">
+                            <input class="form-control" type="text" placeholder="Tag" name="tag">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xl-3 col-form-label">message:</label>
+                        <div class="col-xl-9">
+                            <input class="form-control" type="text" placeholder="Message" name="message">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-warning" type="button" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

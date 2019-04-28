@@ -62,6 +62,14 @@ class Settings(db.Model):
     emergency_phone = db.Column(db.String(128))
 
 
+class Alerts(db.Model):
+    __tablename__ = "alerts"
+
+    id = db.Column(db.Integer, primary_key=True)
+    tag_name = db.Column(db.String(255))
+    message = db.Column(db.String(255))
+
+
 def connect():
     """ Connect to the PostgreSQL database server """
     conn = None
@@ -244,6 +252,24 @@ def doLogin():
     return render_template("login.html", error=error)
 
 
+@app.route('/settings/alert')
+def alert():
+    # Initialise the Farm class and pass submitted form inputs across
+    farm = Farm(request.form,  connect())
+    # Complete signup
+    alerts = farm.fetchAlerts()
+    return render_template("settings/alert.html", **locals())
+
+
+@app.route('/settings/rules')
+def rule():
+    # Initialise the Farm class and pass submitted form inputs across
+    farm = Farm(request.form,  connect())
+    # Complete signup
+    rules = farm.fetchRules()
+    return render_template("settings/rules.html", **locals())
+
+
 @app.route('/processSettings', methods=['POST'])
 def processSettings():
     # Initialise the Farm class and pass submitted form inputs across
@@ -253,6 +279,17 @@ def processSettings():
 
     # redirect back to settings page
     return redirect(url_for('settings'))
+
+
+@app.route('/createAlert', methods=['POST'])
+def createAlert():
+    # Initialise the Farm class and pass submitted form inputs across
+    farm = Farm(request.form,  connect())
+    # Complete signup
+    farm.createAlert()
+
+    # redirect back to alert page
+    return redirect(url_for('alert'))
 
 
 @app.route('/settings')
@@ -282,7 +319,7 @@ def settings():
             emergency_email = previousSetting[0][3]
             emergency_phone = previousSetting[0][4]
 
-    return render_template("settings.html", **locals())
+    return render_template("settings/settings.html", **locals())
 
 
 @app.route('/report')
