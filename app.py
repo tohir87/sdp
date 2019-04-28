@@ -377,9 +377,9 @@ if __name__ == '__main__':
     app.config['SESSION_TYPE'] = 'filesystem'
     app.secret_key = os.urandom(24)
 
-    login_manager = LoginManager()
-    login_manager.init_app(app)
-    login_manager.login_view = 'login'
+    # login_manager = LoginManager()
+    # login_manager.init_app(app)
+    # login_manager.login_view = 'login'
 
     # sess.init_app(app)
     app.run()
