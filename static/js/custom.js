@@ -12,6 +12,53 @@ $('.datepicker').datepicker({
     }
 });
 
+$('a.delete_item').click(function () {
+    console.log("im responding...")
+    ask = confirm("Are you sure you want to delete the selection?(Y/N)")
+    if (ask) {
+        console.log("Going ahead with deletion")
+        // self.location = 
+    }
+});
+
+$('a.confirm_delete').click(function (e) {
+    e.preventDefault();
+    var url = this.href;
+    var msg_ = $(this).data('msg');
+    var title_ = $(this).data('title');
+
+    console.log(url);
+
+    swal({
+        title: typeof title_ !== 'undefined' ? title_ : 'Are you sure?',
+        text: typeof msg_ !== 'undefined' ? msg_ : "Are you sure you want to delete the selected item?",
+        icon: 'warning',
+        buttons: {
+            cancel: {
+                text: 'No, cancel',
+                value: null,
+                visible: true,
+                className: "",
+                closeModal: false
+            },
+            confirm: {
+                text: 'Yes, go ahead!',
+                value: true,
+                visible: true,
+                className: "bg-danger",
+                closeModal: false
+            }
+        }
+    }).then(function (isConfirm) {
+        if (isConfirm) {
+            self.location = url;
+        } else {
+            swal('Cancelled', 'Operation has been cancelled.', 'error');
+        }
+    });
+
+});
+
 function getReport(startDate_, endDate_) {
     console.log(startDate_, endDate_);
     let url = "/api/get_temp_humid?start_date=" + startDate_ + "&end_date=" + endDate_;

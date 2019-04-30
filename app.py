@@ -303,6 +303,28 @@ def createAlert():
     return redirect(url_for('alert'))
 
 
+@app.route('/settings/delete_alert', methods=["POST", "GET"])
+def deleteAlert():
+    # Initialise the Farm class and pass submitted form inputs across
+    farm = Farm(request.args,  connect())
+    # Complete signup
+    farm.deleteAlert()
+
+    # redirect back to alert page
+    return redirect(url_for('alert'))
+
+
+@app.route('/settings/delete_rule', methods=["POST", "GET"])
+def deleteRule():
+    # Initialise the Farm class and pass submitted form inputs across
+    farm = Farm(request.args,  connect())
+    # Complete signup
+    farm.deleteRule()
+
+    # redirect back to rules page
+    return redirect(url_for('rule'))
+
+
 @app.route('/createRule', methods=['POST'])
 def createRule():
     # Initialise the Farm class and pass submitted form inputs across

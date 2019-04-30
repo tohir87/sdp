@@ -126,3 +126,21 @@ class Farm:
                          sensor, rule_type, rule_value, alert_id])
 
         return self.conn.commit()
+
+    def deleteRule(self):
+        id = self.param['id']
+
+        # Delete selected ID from rules table
+        self.cur.execute("DELETE FROM rules WHERE id = %s", [
+                         id])
+
+        return self.conn.commit()
+
+    def deleteAlert(self):
+        id = self.param['id']
+
+        # Delete selected ID from rules table
+        self.cur.execute("DELETE FROM alerts WHERE id = %s", [
+                         id])
+
+        return self.conn.commit()
