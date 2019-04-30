@@ -1,4 +1,5 @@
 import datetime
+from flask_mail import Mail, Message
 
 
 class Farm:
@@ -7,6 +8,7 @@ class Farm:
         self.conn = conn
         # create a cursor
         self.cur = conn.cursor()
+        # self.mail = Mail(app)
 
     def login(self):
         email = self.param['email']
@@ -30,6 +32,13 @@ class Farm:
                          first_name, last_name, email, phone, password])
         self.conn.commit()
         return self.conn.commit()
+
+    def checkDataAgaintRules(self):
+        # get rules where temperature is set
+        self.cur.execute(
+            "SELECT rules.*, alerts.tag_name, alerts.message FROM rules INNER JOIN alerts ON alerts.id = rules.alert_id WHERE rules.sensor = %s and rule_type = %s", ['Temperature', 'Exceed'])
+
+        return self.cur.fetchall()
 
     def saveSensorData(self):
         temperature = self.param['temperature']

@@ -114,6 +114,19 @@ def post_reading():
         farm = Farm(request.args, conn)
         # Complete signup
         farm.saveSensorData()
+        results = farm.checkDataAgaintRules()
+
+        print(results)
+        if (len(results) > 0):
+            if (int(request.args['temperature']) > int(results[0][4])):
+                # send alert
+                alert_message = results[0][6]
+
+                print('sending' + alert_message)
+                msg = Message('Alert', sender='bot@smartfarm.com',
+                              recipients=['otcleantech@gmail.com'])
+                msg.body = alert_message
+                mail.send(msg)
 
     return "Ok"
 
