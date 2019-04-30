@@ -1,0 +1,63 @@
+<!-- Modal-->
+<div class="modal fade" id="newRule" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">New Rule</h4>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form class="form-horizontal" method="POST" action="/createRule">
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label class="col-xl-3 col-form-label">Sensor:</label>
+                        <div class="col-xl-9">
+                            <select required class="form-control" name="sensor" id="sensor">
+                                <option value="">Select</option>
+                                <option value="Temperature">Temperature</option>
+                                <option value="Humidity">Humidity</option>
+                                <option value="Water Level">Water Level</option>
+                                <option value="Motion">Motion</option>
+                                <option value="Feed Level">Feed Level</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xl-3 col-form-label">Rule Type:</label>
+                        <div class="col-xl-9">
+                            <select required class="form-control" name="rule_type" id="rule_type">
+                                <option value="">Select</option>
+                                <option value="Exceed"> &gt; Exceed</option>
+                                <option value="Below"> &lt; Below</option>
+                                <option value="Equals">= Equals</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xl-3 col-form-label">Value:</label>
+                        <div class="col-xl-9">
+                            <input class="form-control" type="text" placeholder="0" name="rule_value" id="rule_value">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xl-3 col-form-label">Alert:</label>
+                        <div class="col-xl-9">
+                            <select required class="form-control" name="alert_id" id="alert_id">
+                                <option value="">Select Alert</option>
+                                {% for alert in alerts %}
+                                <option value="{{ alert[0] }}">{{ alert[2] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-warning" type="button" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

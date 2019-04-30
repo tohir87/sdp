@@ -100,7 +100,7 @@ class Farm:
 
     def fetchRules(self):
         self.cur.execute(
-            "SELECT * FROM rules")
+            "SELECT rules.*, alerts.tag_name FROM rules INNER JOIN alerts ON alerts.id = rules.alert_id")
         return self.cur.fetchall()
 
     def createAlert(self):
@@ -111,5 +111,18 @@ class Farm:
         # Insert new settings
         self.cur.execute("INSERT INTO alerts (tag_name, message) VALUES (%s, %s)", [
                          tag, message])
+
+        return self.conn.commit()
+
+    def createRule(self):
+        # Grab form entries
+        sensor = self.param['sensor']
+        rule_type = self.param['rule_type']
+        rule_value = self.param['rule_value']
+        alert_id = self.param['alert_id']
+
+        # Insert new settings
+        self.cur.execute("INSERT INTO rules (sensor, rule_type, rule_value, alert_id) VALUES (%s, %s, %s, %s)", [
+                         sensor, rule_type, rule_value, alert_id])
 
         return self.conn.commit()

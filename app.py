@@ -70,6 +70,16 @@ class Alerts(db.Model):
     message = db.Column(db.String(255))
 
 
+class Rules(db.Model):
+    __tablename__ = "rules"
+
+    id = db.Column(db.Integer, primary_key=True)
+    sensor = db.Column(db.String(255))
+    rule_type = db.Column(db.String(255))
+    rule_value = db.Column(db.Integer)
+    alert_id = db.Column(db.Integer)
+
+
 def connect():
     """ Connect to the PostgreSQL database server """
     conn = None
@@ -267,6 +277,7 @@ def rule():
     farm = Farm(request.form,  connect())
     # Complete signup
     rules = farm.fetchRules()
+    alerts = farm.fetchAlerts()
     return render_template("settings/rules.html", **locals())
 
 
@@ -290,6 +301,17 @@ def createAlert():
 
     # redirect back to alert page
     return redirect(url_for('alert'))
+
+
+@app.route('/createRule', methods=['POST'])
+def createRule():
+    # Initialise the Farm class and pass submitted form inputs across
+    farm = Farm(request.form,  connect())
+    # Complete signup
+    farm.createRule()
+
+    # redirect back to alert page
+    return redirect(url_for('rule'))
 
 
 @app.route('/settings')
