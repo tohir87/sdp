@@ -261,7 +261,7 @@ def doLogin():
         session['phone'] = userInfo[0][5]
         session['logged_in'] = True
         # redirect to needed page
-        return redirect(url_for('settings'))
+        return redirect(url_for('home'))
     else:
         error = 'Invalid email or password. Please try again'
     return render_template("login.html", error=error)
