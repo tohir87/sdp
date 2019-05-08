@@ -1,260 +1,119 @@
 {% extends 'layout.html' %}
 {% block body %}
-<meta http-equiv="refresh" content="5">
-<style>
-    .highcharts-credits {
-        display: none;
-         !important
-    }
 
-    .highcharts-button-symbol {
-        display: none;
-         !important
-    }
+<div class="row">
 
-    .highcharts-label-box highcharts-data-label-box {}
-</style>
+    <div class="col-xl-3 col-md-6">
+        <!-- START card-->
+        <div class="card flex-row align-items-center align-items-stretch border-0">
+            <div class="col-4 d-flex align-items-center bg-danger-dark justify-content-center rounded-left">
+                <em class="wi wi-day-sunny fa-3x"></em>
+            </div>
+            <div class="col-8 py-3 bg-danger rounded-right">
+                <div class="h3 mt-0"> 20
+                    <small></small>
+                </div>
+                <div class="text-uppercase">Current Temperature</div>
+            </div>
+        </div>
+    </div>
 
-<h3 class="jumbotron text-center" style="color:red;">Flame Sensor Triggered: {{ status_flame }}</h3><br>
-<div id="container" style="min-width: 210px; height: 400px; margin: 0 auto"></div>
-<h3 class="jumbotron text-center">In Fahrenheit (F):
-    <script>document.write(({{ temp }}* 1.8 + 32).toFixed(2));</script>
-</h3><br>
-<div id="container2" style="min-width: 210px; height: 400px; margin: 0 auto"></div>
-<script>
+    <div class="col-xl-3 col-md-6">
+        <!-- START card-->
+        <div class="card flex-row align-items-center align-items-stretch border-0">
+            <div class="col-4 d-flex align-items-center bg-warning-dark justify-content-center rounded-left">
+                <!-- <em class="icon-globe fa-3x"></em> -->
+                <em class="fas fa-users fa-3x"></em>
+            </div>
+            <div class="col-8 py-3 bg-warning rounded-right">
+                <div class="h3 mt-0">20%
+                    <small></small>
+                </div>
+                <div class="text-uppercase">Feed Level</div>
+            </div>
+        </div>
+    </div>
 
-    Highcharts.chart('container', {
+    <div class="col-xl-3 col-md-6">
+        <!-- START card-->
+        <div class="card flex-row align-items-center align-items-stretch border-0">
+            <div class="col-4 d-flex align-items-center bg-primary-dark justify-content-center rounded-left">
+                <!-- <em class="icon-globe fa-3x"></em> -->
+                <em class="icon-cloud-download fa-3x"></em>
+            </div>
+            <div class="col-8 py-3 bg-primary rounded-right">
+                <div class="h3 mt-0">20%
+                    <small></small>
+                </div>
+                <div class="text-uppercase">Current Humidity</div>
+            </div>
+        </div>
+    </div>
 
-        chart: {
-            type: 'gauge',
-            plotBackgroundColor: null,
-            plotBackgroundImage: null,
-            plotBorderWidth: 0,
-            plotShadow: false
-        },
+    <div class="col-xl-3 col-md-6">
+        <!-- START card-->
+        <div class="card flex-row align-items-center align-items-stretch border-0">
+            <div class="col-4 d-flex align-items-center bg-purple-dark justify-content-center rounded-left">
+                <!-- <em class="icon-globe fa-3x"></em> -->
+                <em class="fas fa-users fa-3x"></em>
+            </div>
+            <div class="col-8 py-3 bg-purple rounded-right">
+                <div class="h3 mt-0">45%
+                    <small></small>
+                </div>
+                <div class="text-uppercase">Water Level</div>
+            </div>
+        </div>
+    </div>
+</div>
 
-        title: {
-            text: 'Current Temperature'
-        },
+<div class="row">
+    <div class="col-md-6">
+        <!-- START card-->
+        <div class="card border-0">
+            <div class="card-header bg-primary">
+                <h4 class="mt-0">
+                    Quick Links
+                </h4>
+            </div>
+            <div class="card-body">
 
-        pane: {
-            startAngle: -150,
-            endAngle: 150,
-            background: [{
-                backgroundColor: {
-                    linearGradient: { x1: 3, y1: 3, x2: 0, y2: 1 },
-                    stops: [
-                        [0, '#FFF'],
-                        [1, '#333']
-                    ]
-                },
-                borderWidth: 0,
-                outerRadius: '109%'
-            }, {
-                backgroundColor: {
-                    linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
-                    stops: [
-                        [0, '#333'],
-                        [1, '#FFF']
-                    ]
-                },
-                borderWidth: 1,
-                outerRadius: '107%'
-            }, {
-                // default background
-            }, {
-                backgroundColor: '#DDD',
-                borderWidth: 0,
-                outerRadius: '105%',
-                innerRadius: '103%'
-            }]
-        },
+                <a class="btn btn-warning btn-lg btn-block mt-3" href="/settings">Settings</a>
 
-        // the value axis
-        yAxis: {
-            min: -30,
-            max: 50,
+                <div class="mt-3">
+                    <a class="btn btn-info btn-lg btn-block" href="/settings/alert">Setup Alerts</a>
+                </div>
 
-            minorTickInterval: 'auto',
-            minorTickWidth: 1,
-            minorTickLength: 10,
-            minorTickPosition: 'inside',
-            minorTickColor: '#666',
+                <p>
+                    <a class="btn btn-danger btn-lg mt-3 btn-block" href="/settings/rules">Setup Rules</a>
+                </p>
 
-            tickPixelInterval: 30,
-            tickWidth: 2,
-            tickPosition: 'inside',
-            tickLength: 10,
-            tickColor: '#666',
-            labels: {
-                step: 2,
-                rotation: 'auto'
-            },
-            title: {
-                text: 'Celsius (C)'
-            },
-            plotBands: [{
-                from: -30,
-                to: 10,
-                color: '#0fc0fc' // blue
-            }, {
-                from: 10,
-                to: 22,
-                color: '#0ffc4b' // green
-            }, {
-                from: 22,
-                to: 30,
-                color: '#ffff00' // yellow
-            }, {
-                from: 30,
-                to: 50,
-                color: '#ff0000' // red
-            }]
-        },
+            </div>
+        </div>
+        <!-- END card-->
+    </div>
+    <div class="col-md-6">
+        <!-- <div class="col-xl-3 col-lg-6 col-md-12"> -->
+        <!-- START date widget-->
+        <div class="card flex-row align-items-center align-items-stretch border-0">
+            <div class="col-4 d-flex align-items-center bg-green justify-content-center rounded-left">
+                <div class="text-center">
+                    <!-- See formats: https://docs.angularjs.org/api/ng/filter/date-->
+                    <div class="text-sm" data-now="" data-format="MMMM YYYY"></div>
+                    <br>
+                    <div class="h2 mt-0" data-now="" data-format="D"></div>
+                </div>
+            </div>
+            <div class="col-8 py-3 rounded-right">
+                <div class="text-uppercase" data-now="" data-format="dddd"></div>
+                <br>
+                <div class="h3 mt-0" data-now="" data-format="h:mm"></div>
+                <div class="text-muted text-sm" data-now="" data-format="a"></div>
+            </div>
+        </div>
+        <!-- END date widget-->
+        <!-- </div> -->
+    </div>
+</div>
 
-        series: [{
-            name: 'Temperature',
-            data: [{{ temp }}],
-        tooltip: {
-            valueSuffix: ' Celsius (C)'
-        }
-    }]
-
-},
-        // Add some life
-        function (chart) {
-            if (!chart.renderer.forExport) {
-                setInterval(function () {
-                    var point = chart.series[0].points[0],
-                        newVal,
-                        //inc = Math.round((Math.random() - 0.5) * 20);
-
-                        newVal = point.y + inc;
-                    if (newVal < 0 || newVal > 50) {
-                        newVal = point.y - inc;
-                    }
-
-                    point.update(newVal);
-
-                }, 3000);
-            }
-        });
-</script>
-
-<!-- Container2 -->
-<script>
-
-    Highcharts.chart('container2', {
-
-        chart: {
-            type: 'gauge',
-            plotBackgroundColor: null,
-            plotBackgroundImage: null,
-            plotBorderWidth: 0,
-            plotShadow: false
-        },
-
-        title: {
-            text: 'Current Humidity'
-        },
-
-        pane: {
-            startAngle: -150,
-            endAngle: 150,
-            background: [{
-                backgroundColor: {
-                    linearGradient: { x1: 3, y1: 3, x2: 0, y2: 1 },
-                    stops: [
-                        [0, '#FFF'],
-                        [1, '#333']
-                    ]
-                },
-                borderWidth: 0,
-                outerRadius: '109%'
-            }, {
-                backgroundColor: {
-                    linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
-                    stops: [
-                        [0, '#333'],
-                        [1, '#FFF']
-                    ]
-                },
-                borderWidth: 1,
-                outerRadius: '107%'
-            }, {
-                // default background
-            }, {
-                backgroundColor: '#DDD',
-                borderWidth: 0,
-                outerRadius: '105%',
-                innerRadius: '103%'
-            }]
-        },
-
-        // the value axis
-        yAxis: {
-            min: 0,
-            max: 100,
-
-            minorTickInterval: 'auto',
-            minorTickWidth: 1,
-            minorTickLength: 10,
-            minorTickPosition: 'inside',
-            minorTickColor: '#666',
-
-            tickPixelInterval: 30,
-            tickWidth: 2,
-            tickPosition: 'inside',
-            tickLength: 10,
-            tickColor: '#666',
-            labels: {
-                step: 2,
-                rotation: 'auto'
-            },
-            title: {
-                text: 'Percent (%)'
-            },
-            plotBands: [{
-                from: 0,
-                to: 40,
-                color: '#0fc0fc' // Blue
-            }, {
-                from: 40,
-                to: 70,
-                color: '#0ffc4b' // Green
-            }, {
-                from: 70,
-                to: 100,
-                color: '#ff0000' // red
-            }]
-        },
-
-        series: [{
-            name: 'Humidity',
-            data: [{{ hum }}],
-        tooltip: {
-            valueSuffix: 'Percent (%)'
-        }
-    }]
-
-},
-        // Add some life
-        function (chart) {
-            if (!chart.renderer.forExport) {
-                setInterval(function () {
-                    var point = chart.series[0].points[0],
-                        newVal,
-                        //inc = Math.round((Math.random() - 0.5) * 20);
-
-                        newVal = point.y + inc;
-                    if (newVal < 0 || newVal > 50) {
-                        newVal = point.y - inc;
-                    }
-
-                    point.update(newVal);
-
-                }, 3000);
-            }
-        });
-</script>
 {% endblock %}

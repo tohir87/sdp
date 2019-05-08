@@ -1,12 +1,12 @@
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 import os
-from flask import Flask, session, escape, render_template, jsonify, request, redirect, url_for, abort
+from flask import Flask, session, escape, render_template, jsonify, request, redirect, url_for, abort, flash
 from flask_restful import Resource, Api
 import datetime
 from classes.farm import Farm
 import psycopg2
-from flask_login import current_user, LoginManager, login_user
+from flask_login import current_user, LoginManager, login_user, UserMixin
 from flask_mail import Mail, Message
 
 app = Flask(__name__)
@@ -22,7 +22,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -94,14 +94,6 @@ def connect():
         if conn is not None:
             conn.close()
             print('Database connection closed.')
-
-
-def checkLogin():
-    if current_user.is_authenticated:
-        print("Session is active")
-    else:
-        print("Session has expired")
-        return render_template("login.html")
 
 
 @app.route('/api/post_reading', methods=["POST", "GET"])
@@ -275,80 +267,6 @@ def doLogin():
     return render_template("login.html", error=error)
 
 
-@app.route('/settings/alert')
-def alert():
-    # Initialise the Farm class and pass submitted form inputs across
-    farm = Farm(request.form,  connect())
-    # Complete signup
-    alerts = farm.fetchAlerts()
-    return render_template("settings/alert.html", **locals())
-
-
-@app.route('/settings/rules')
-def rule():
-    # Initialise the Farm class and pass submitted form inputs across
-    farm = Farm(request.form,  connect())
-    # Complete signup
-    rules = farm.fetchRules()
-    alerts = farm.fetchAlerts()
-    return render_template("settings/rules.html", **locals())
-
-
-@app.route('/processSettings', methods=['POST'])
-def processSettings():
-    # Initialise the Farm class and pass submitted form inputs across
-    farm = Farm(request.form,  connect())
-    # Complete signup
-    farm.saveSettings()
-
-    # redirect back to settings page
-    return redirect(url_for('settings'))
-
-
-@app.route('/createAlert', methods=['POST'])
-def createAlert():
-    # Initialise the Farm class and pass submitted form inputs across
-    farm = Farm(request.form,  connect())
-    # Complete signup
-    farm.createAlert()
-
-    # redirect back to alert page
-    return redirect(url_for('alert'))
-
-
-@app.route('/settings/delete_alert', methods=["POST", "GET"])
-def deleteAlert():
-    # Initialise the Farm class and pass submitted form inputs across
-    farm = Farm(request.args,  connect())
-    # Complete signup
-    farm.deleteAlert()
-
-    # redirect back to alert page
-    return redirect(url_for('alert'))
-
-
-@app.route('/settings/delete_rule', methods=["POST", "GET"])
-def deleteRule():
-    # Initialise the Farm class and pass submitted form inputs across
-    farm = Farm(request.args,  connect())
-    # Complete signup
-    farm.deleteRule()
-
-    # redirect back to rules page
-    return redirect(url_for('rule'))
-
-
-@app.route('/createRule', methods=['POST'])
-def createRule():
-    # Initialise the Farm class and pass submitted form inputs across
-    farm = Farm(request.form,  connect())
-    # Complete signup
-    farm.createRule()
-
-    # redirect back to alert page
-    return redirect(url_for('rule'))
-
-
 @app.route('/settings')
 def settings():
 
@@ -430,13 +348,87 @@ def analytics():
     return render_template("analytics.html", **locals())
 
 
+@app.route('/settings/alert')
+def alert():
+    # Initialise the Farm class and pass submitted form inputs across
+    farm = Farm(request.form,  connect())
+    # Complete signup
+    alerts = farm.fetchAlerts()
+    return render_template("settings/alert.html", **locals())
+
+
+@app.route('/settings/rules')
+def rule():
+    # Initialise the Farm class and pass submitted form inputs across
+    farm = Farm(request.form,  connect())
+    # Complete signup
+    rules = farm.fetchRules()
+    alerts = farm.fetchAlerts()
+    return render_template("settings/rules.html", **locals())
+
+
+@app.route('/processSettings', methods=['POST'])
+def processSettings():
+    # Initialise the Farm class and pass submitted form inputs across
+    farm = Farm(request.form,  connect())
+    # Complete signup
+    farm.saveSettings()
+
+    # redirect back to settings page
+    return redirect(url_for('settings'))
+
+
+@app.route('/createAlert', methods=['POST'])
+def createAlert():
+    # Initialise the Farm class and pass submitted form inputs across
+    farm = Farm(request.form,  connect())
+    # Complete signup
+    farm.createAlert()
+
+    # redirect back to alert page
+    return redirect(url_for('alert'))
+
+
+@app.route('/settings/delete_alert', methods=["POST", "GET"])
+def deleteAlert():
+    # Initialise the Farm class and pass submitted form inputs across
+    farm = Farm(request.args,  connect())
+    # Complete signup
+    farm.deleteAlert()
+
+    # redirect back to alert page
+    return redirect(url_for('alert'))
+
+
+@app.route('/settings/delete_rule', methods=["POST", "GET"])
+def deleteRule():
+    # Initialise the Farm class and pass submitted form inputs across
+    farm = Farm(request.args,  connect())
+    # Complete signup
+    farm.deleteRule()
+
+    # redirect back to rules page
+    return redirect(url_for('rule'))
+
+
+@app.route('/createRule', methods=['POST'])
+def createRule():
+    # Initialise the Farm class and pass submitted form inputs across
+    farm = Farm(request.form,  connect())
+    # Complete signup
+    farm.createRule()
+
+    # redirect back to alert page
+    return redirect(url_for('rule'))
+
+
 if __name__ == '__main__':
     app.config['SESSION_TYPE'] = 'filesystem'
     app.secret_key = os.urandom(24)
 
-    # login_manager = LoginManager()
-    # login_manager.init_app(app)
-    # login_manager.login_view = 'login'
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+    login_manager.login_view = 'login'
 
     # sess.init_app(app)
     app.run()

@@ -37,9 +37,11 @@
                 </div>
                 <div class="card-body">
                     <p class="text-center py-2">SIGN IN TO CONTINUE.</p>
-                    {% if error %}
-                    <p class="text-danger"><strong>Error:</strong>{{ error }}</p>
+                    {% with messages = get_flashed_messages() %}
+                    {% if message %}
+                    <p class="text-danger"><strong>Error:</strong>{{ message[0] }}</p>
                     {% endif %}
+                    {% endwith %}
                     <form class="mb-3" id="loginForm" method="POST" action="/doLogin" novalidate>
                         <div class="form-group">
                             <div class="input-group with-focus">
