@@ -43,12 +43,13 @@ class Farm:
     def saveSensorData(self):
         temperature = self.param['temperature']
         humidity = self.param['humidity']
+        water_level = self.param['water_level']
 
-        print(temperature, humidity)
+        print(temperature, humidity, water_level)
 
         # insert new record inside temp table
-        self.cur.execute("INSERT INTO dht_sensor_readings (reading_date, reading_time, temperature, humidity) VALUES (date('now'), now()::time ,%s,%s)", [
-            temperature, humidity])
+        self.cur.execute("INSERT INTO dht_sensor_readings (reading_date, reading_time, temperature, humidity, water_level) VALUES (date('now'), now()::time ,%s,%s,%s)", [
+            temperature, humidity, water_level])
 
         return self.conn.commit()
 
