@@ -41,6 +41,7 @@ class DhtData(db.Model):
     reading_time = db.Column(db.Time())
     temperature = db.Column(db.String(128))
     humidity = db.Column(db.String(128))
+    water_level = db.Column(db.Integer)
 
 
 class WeightData(db.Model):
@@ -354,6 +355,10 @@ def alert():
     farm = Farm(request.form,  connect())
     # Complete signup
     alerts = farm.fetchAlerts()
+
+    page_title = "Settings"
+    page_desc = ""
+
     return render_template("settings/alert.html", **locals())
 
 
@@ -364,6 +369,9 @@ def rule():
     # Complete signup
     rules = farm.fetchRules()
     alerts = farm.fetchAlerts()
+
+    page_title = "Settings"
+    page_desc = ""
     return render_template("settings/rules.html", **locals())
 
 
