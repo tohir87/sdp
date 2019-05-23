@@ -22,11 +22,15 @@
         <!-- START card-->
         <div class="card flex-row align-items-center align-items-stretch border-0">
             <div class="col-4 d-flex align-items-center bg-warning-dark justify-content-center rounded-left">
-                <!-- <em class="icon-globe fa-3x"></em> -->
-                <em class="fas fa-users fa-3x"></em>
+                <em class="fas fa-hourglass-end fa-3x"></em>
             </div>
             <div class="col-8 py-3 bg-warning rounded-right">
-                <div class="h3 mt-0">20%
+                <div class="h3 mt-0">
+                    {% with weight = recent_weight %}
+                    {% if weight %}
+                    {{ recent_weight.weight }} Grams
+                    {% endif %}
+                    {% endwith %}
                     <small></small>
                 </div>
                 <div class="text-uppercase">Feed Level</div>

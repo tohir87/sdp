@@ -329,7 +329,8 @@ def home():
 
     # get the last row from dht table
     recent_reading = DhtData.query.order_by(desc('id')).first()
-    print(recent_reading)
+    # get the last recorded feed weight
+    recent_weight = WeightData.query.order_by(desc('id')).first()
 
     return render_template("home.html", **locals())
 
