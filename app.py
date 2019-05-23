@@ -8,6 +8,7 @@ from classes.farm import Farm
 import psycopg2
 from flask_login import current_user, LoginManager, login_user, UserMixin
 from flask_mail import Mail, Message
+from sqlalchemy import desc
 
 app = Flask(__name__)
 # Init mail
@@ -325,6 +326,10 @@ def report():
 def home():
     page_title = "Home"
     page_desc = "Welcome " + session['first_name']
+
+    # get the last row from dht table
+    recent_reading = DhtData.query.order_by(desc('id')).first()
+    print(recent_reading)
 
     return render_template("home.html", **locals())
 
