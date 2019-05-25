@@ -9,6 +9,7 @@ import psycopg2
 from flask_login import current_user, LoginManager, login_user, UserMixin
 from flask_mail import Mail, Message
 from sqlalchemy import desc
+from urllib.request import urlopen
 
 app = Flask(__name__)
 # Init mail
@@ -98,6 +99,22 @@ def connect():
             print('Database connection closed.')
 
 
+def sendNotification(row):
+    print(row.rule_type, row.rule_value, row.message)
+
+    print('sending ' + row.message)
+    msg = Message('Alert: ' + row.tag_name, sender='bot@smartfarm.com',
+                  recipients=['otcleantech@gmail.com'])
+    msg.body = row.message
+    mail.send(msg)
+    url = "https://api.africastalking.com/restless/send?message=" + row.message + \
+        "&username=tbasetest2018&Apikey=ceeabb27657cd6cfb3952dfae8b7943b4975dbee6a5b55fd4819f333bb1100ee&to=" + \
+            "+353894574866" 
+            # + str(session['phone'])
+    # urlopen(url)
+    return
+
+
 @app.route('/api/post_reading', methods=["POST", "GET"])
 def post_reading():
 
@@ -108,19 +125,32 @@ def post_reading():
         farm = Farm(request.args, conn)
         # Complete signup
         farm.saveSensorData()
-        results = farm.checkDataAgaintRules()
 
-        print(results)
-        if (len(results) > 0):
-            if (int(request.args['temperature']) > int(results[0][4])):
-                # send alert
-                alert_message = results[0][6]
+        rule_type_below = "Below"
+        rule_type_exceed = "Exceed"
+        # results = farm.checkDataAgaintRules()
+        results_exceed = Rules.query.join(Alerts, Alerts.id == Rules.alert_id).add_columns(
+            Rules.sensor, Rules.rule_type, Rules.rule_value, Alerts.message, Alerts.tag_name).filter(Rules.rule_type == rule_type_exceed)
 
-                print('sending' + alert_message)
-                msg = Message('Alert', sender='bot@smartfarm.com',
-                              recipients=['otcleantech@gmail.com'])
-                msg.body = alert_message
-                mail.send(msg)
+        # with results xceeding settings:
+        if results_exceed.count() > 0:
+            for row in results_exceed:
+                if row.sensor == 'Temperature' and int(request.args['temperature']) > row.rule_value:
+                    sendNotification(row)
+                elif row.sensor == 'Humidity' and int(request.args['humidity']) > row.rule_value:
+                    sendNotification(row)
+
+        results_below = Rules.query.join(Alerts, Alerts.id == Rules.alert_id).add_columns(Rules.sensor, Rules.rule_type, Rules.rule_value, Alerts.message, Alerts.tag_name).filter(Rules.rule_type == rule_type_below)
+
+        # with results below settings:
+        if results_below.count() > 0:
+            for row in results_below:
+                if row.sensor == 'Water Level' and int(request.args['water_level']) < row.rule_value:
+                    sendNotification(row)
+                elif row.sensor == 'Humidity' and int(request.args['humidity']) < row.rule_value:
+                    sendNotification(row)
+                elif row.sensor == 'Temperature' and int(request.args['temperature']) < row.rule_value:
+                    sendNotification(row)
 
     return "Ok"
 
@@ -324,15 +354,19 @@ def report():
 
 @app.route('/home')
 def home():
-    page_title = "Home"
-    page_desc = "Welcome " + session['first_name']
+    if 'first_name' in session:
+        page_title = "Home"
+        page_desc = "Welcome " + session['first_name']
 
-    # get the last row from dht table
-    recent_reading = DhtData.query.order_by(desc('id')).first()
-    # get the last recorded feed weight
-    recent_weight = WeightData.query.order_by(desc('id')).first()
+        # get the last row from dht table
+        recent_reading = DhtData.query.order_by(desc('id')).first()
+        # get the last recorded feed weight
+        recent_weight = WeightData.query.order_by(desc('id')).first()
 
-    return render_template("home.html", **locals())
+        return render_template("home.html", **locals())
+    else:
+        flash("You are not logged in")
+        return redirect(url_for('login'))
 
 
 @app.route('/analytics')
@@ -357,28 +391,36 @@ def analytics():
 
 @app.route('/settings/alert')
 def alert():
-    # Initialise the Farm class and pass submitted form inputs across
-    farm = Farm(request.form,  connect())
-    # Complete signup
-    alerts = farm.fetchAlerts()
+    if 'first_name' in session:
+        # Initialise the Farm class and pass submitted form inputs across
+        farm = Farm(request.form,  connect())
+        # Complete signup
+        alerts = farm.fetchAlerts()
 
-    page_title = "Settings"
-    page_desc = ""
+        page_title = "Settings"
+        page_desc = ""
 
-    return render_template("settings/alert.html", **locals())
+        return render_template("settings/alert.html", **locals())
+    else:
+        flash("You are not logged in")
+        return redirect(url_for('login'))
 
 
 @app.route('/settings/rules')
 def rule():
-    # Initialise the Farm class and pass submitted form inputs across
-    farm = Farm(request.form,  connect())
-    # Complete signup
-    rules = farm.fetchRules()
-    alerts = farm.fetchAlerts()
+    if 'first_name' in session:
+        # Initialise the Farm class and pass submitted form inputs across
+        farm = Farm(request.form,  connect())
+        # Complete signup
+        rules = farm.fetchRules()
+        alerts = farm.fetchAlerts()
 
-    page_title = "Settings"
-    page_desc = ""
-    return render_template("settings/rules.html", **locals())
+        page_title = "Settings"
+        page_desc = ""
+        return render_template("settings/rules.html", **locals())
+    else:
+        flash("You are not logged in")
+        return redirect(url_for('login'))
 
 
 @app.route('/processSettings', methods=['POST'])
@@ -394,13 +436,17 @@ def processSettings():
 
 @app.route('/createAlert', methods=['POST'])
 def createAlert():
-    # Initialise the Farm class and pass submitted form inputs across
-    farm = Farm(request.form,  connect())
-    # Complete signup
-    farm.createAlert()
+    if 'first_name' in session:
+        # Initialise the Farm class and pass submitted form inputs across
+        farm = Farm(request.form,  connect())
+        # Complete signup
+        farm.createAlert()
 
-    # redirect back to alert page
-    return redirect(url_for('alert'))
+        # redirect back to alert page
+        return redirect(url_for('alert'))
+    else:
+        flash("You are not logged in")
+        return redirect(url_for('login'))
 
 
 @app.route('/settings/delete_alert', methods=["POST", "GET"])
@@ -427,13 +473,17 @@ def deleteRule():
 
 @app.route('/createRule', methods=['POST'])
 def createRule():
-    # Initialise the Farm class and pass submitted form inputs across
-    farm = Farm(request.form,  connect())
-    # Complete signup
-    farm.createRule()
+    if 'first_name' in session:
+        # Initialise the Farm class and pass submitted form inputs across
+        farm = Farm(request.form,  connect())
+        # Complete signup
+        farm.createRule()
 
-    # redirect back to alert page
-    return redirect(url_for('rule'))
+        # redirect back to alert page
+        return redirect(url_for('rule'))
+    else:
+        flash("You are not logged in")
+        return redirect(url_for('login'))
 
 
 if __name__ == '__main__':

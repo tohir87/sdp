@@ -36,7 +36,7 @@ class Farm:
     def checkDataAgaintRules(self):
         # get rules where temperature is set
         self.cur.execute(
-            "SELECT rules.*, alerts.tag_name, alerts.message FROM rules INNER JOIN alerts ON alerts.id = rules.alert_id WHERE rules.sensor = %s and rule_type = %s", ['Temperature', 'Exceed'])
+            "SELECT rules.*, alerts.tag_name, alerts.message FROM rules INNER JOIN alerts ON alerts.id = rules.alert_id WHERE rules.rule_type = %s", ['Exceed'])
 
         return self.cur.fetchall()
 

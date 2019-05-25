@@ -6,7 +6,8 @@ class Config(object):
     DEBUG = False
     TESTING = False
     CSRF_ENABLED = True
-    SECRET_KEY = os.urandom(24)
+    SECRET_KEY = "\xba$o\xa44\xbd\xa5=\x1f\xaa\xd9\xba\x19T\xe8\x01\xc5\xcdV\xd2?\x88\xbc["
+    # SECRET_KEY = os.urandom(24)
     MAIL_PORT = 2525
     MAIL_USE_TLS = False
     MAIL_SERVER = "smtp.mailtrap.io"
