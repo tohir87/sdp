@@ -34,7 +34,21 @@
                 <h4>Recent Temperature/Humidity of the Brood</h4>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
+                {% for row in dht_data %}
+                <div class="card card-default" style="width: 18rem;">
+                    <div class="card-header bg-primary">
+                        {{row.reading_date}}/{{row.reading_time}}
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Temperature: {{row.temperature}}</li>
+                        <li class="list-group-item">Humidity: {{row.humidity}}</li>
+                        <li class="list-group-item">Water Level: {{row.water_level}}</li>
+                        <li class="list-group-item">Feed Level: {{row.feed_level}}</li>
+                    </ul>
+                </div>
+                {% endfor %}
+
+                <!-- <div class="table-responsive">
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -57,7 +71,7 @@
                             {% endfor %}
                         </tbody>
                     </table>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
