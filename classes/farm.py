@@ -40,19 +40,6 @@ class Farm:
 
         return self.cur.fetchall()
 
-    def saveSensorData(self):
-        temperature = self.param['temperature']
-        humidity = self.param['humidity']
-        water_level = self.param['water_level']
-
-        print(temperature, humidity, water_level)
-
-        # insert new record inside temp table
-        self.cur.execute("INSERT INTO dht_sensor_readings (reading_date, reading_time, temperature, humidity, water_level) VALUES (date('now'), now()::time ,%s,%s,%s)", [
-            temperature, humidity, water_level])
-
-        return self.conn.commit()
-
     def saveFeedQuantity(self):
         weight = self.param['weight']
 
@@ -82,11 +69,6 @@ class Farm:
 
     def getSetting(self):
         self.cur.execute("SELECT * FROM settings ORDER BY id DESC LIMIT 1")
-        return self.cur.fetchall()
-
-    def getDHTReading(self):
-        self.cur.execute(
-            "SELECT * FROM dht_sensor_readings ORDER BY id DESC LIMIT 50")
         return self.cur.fetchall()
 
     def getFeedReading(self):

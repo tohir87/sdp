@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 from flask import Flask, session, escape, render_template, jsonify, request, redirect, url_for, abort, flash
 from flask_restful import Resource, Api
-import datetime
+from datetime import datetime, timedelta
 from classes.farm import Farm
 import psycopg2
 from flask_login import current_user, LoginManager, login_user, UserMixin
@@ -44,6 +44,7 @@ class DhtData(db.Model):
     temperature = db.Column(db.String(128))
     humidity = db.Column(db.String(128))
     water_level = db.Column(db.Integer)
+    feed_level = db.Column(db.String(128))
 
 
 class WeightData(db.Model):
@@ -117,40 +118,47 @@ def sendNotification(row):
 
 @app.route('/api/post_reading', methods=["POST", "GET"])
 def post_reading():
+    print("posting data from sensor")
 
-    # create a database connection
-    conn = connect()
-    with conn:
-        print("posting data from sensor")
-        farm = Farm(request.args, conn)
-        # Complete signup
-        farm.saveSensorData()
+    temperature = request.args['temperature']
+    humidity = request.args['humidity']
+    water_level = request.args['water_level']
+    feed_level = request.args['feed_level']
+    reading_date = datetime.now().strftime('%Y-%m-%d')
+    reading_time = datetime.now().strftime('%H:%M:%S')
 
-        rule_type_below = "Below"
-        rule_type_exceed = "Exceed"
-        # results = farm.checkDataAgaintRules()
-        results_exceed = Rules.query.join(Alerts, Alerts.id == Rules.alert_id).add_columns(
-            Rules.sensor, Rules.rule_type, Rules.rule_value, Alerts.message, Alerts.tag_name).filter(Rules.rule_type == rule_type_exceed)
+    # Save new sensor readings
+    new_reading = DhtData(reading_date=reading_date,reading_time=reading_time,temperature=temperature,humidity=humidity,water_level=water_level,feed_level=feed_level)
 
-        # with results xceeding settings:
-        if results_exceed.count() > 0:
-            for row in results_exceed:
-                if row.sensor == 'Temperature' and int(request.args['temperature']) > row.rule_value:
-                    sendNotification(row)
-                elif row.sensor == 'Humidity' and int(request.args['humidity']) > row.rule_value:
-                    sendNotification(row)
+    # Add new record to db
+    db.session.add(new_reading)
+    db.session.commit()
 
-        results_below = Rules.query.join(Alerts, Alerts.id == Rules.alert_id).add_columns(Rules.sensor, Rules.rule_type, Rules.rule_value, Alerts.message, Alerts.tag_name).filter(Rules.rule_type == rule_type_below)
+    rule_type_below = "Below"
+    rule_type_exceed = "Exceed"
+    # results = farm.checkDataAgaintRules()
+    results_exceed = Rules.query.join(Alerts, Alerts.id == Rules.alert_id).add_columns(
+        Rules.sensor, Rules.rule_type, Rules.rule_value, Alerts.message, Alerts.tag_name).filter(Rules.rule_type == rule_type_exceed)
 
-        # with results below settings:
-        if results_below.count() > 0:
-            for row in results_below:
-                if row.sensor == 'Water Level' and int(request.args['water_level']) < row.rule_value:
-                    sendNotification(row)
-                elif row.sensor == 'Humidity' and int(request.args['humidity']) < row.rule_value:
-                    sendNotification(row)
-                elif row.sensor == 'Temperature' and int(request.args['temperature']) < row.rule_value:
-                    sendNotification(row)
+    # with results xceeding settings:
+    if results_exceed.count() > 0:
+        for row in results_exceed:
+            if row.sensor == 'Temperature' and int(request.args['temperature']) > row.rule_value:
+                sendNotification(row)
+            elif row.sensor == 'Humidity' and int(request.args['humidity']) > row.rule_value:
+                sendNotification(row)
+
+    results_below = Rules.query.join(Alerts, Alerts.id == Rules.alert_id).add_columns(Rules.sensor, Rules.rule_type, Rules.rule_value, Alerts.message, Alerts.tag_name).filter(Rules.rule_type == rule_type_below)
+
+    # with results below settings:
+    if results_below.count() > 0:
+        for row in results_below:
+            if row.sensor == 'Water Level' and int(request.args['water_level']) < row.rule_value:
+                sendNotification(row)
+            elif row.sensor == 'Humidity' and int(request.args['humidity']) < row.rule_value:
+                sendNotification(row)
+            elif row.sensor == 'Temperature' and int(request.args['temperature']) < row.rule_value:
+                sendNotification(row)
 
     return "Ok"
 
@@ -335,19 +343,11 @@ def report():
     page_title = "Report"
     page_desc = "Temperature, humidity, feed and water level report over time"
 
-    # dht_data = []
-    # feed_data = []
-
-    # Create connection
-    conn = connect()
-    with conn:
-        print("Getting the sensor readings")
-        farm = Farm([],  conn)
-        # Get readings
-        dht_data = farm.getDHTReading()
-        print(dht_data)
-        feed_data = farm.getFeedReading()
-        print(feed_data)
+   
+    print("Getting the sensor readings")
+    # Get readings
+    dht_data = DhtData.query.order_by(desc('id')).all()
+    print(dht_data)
 
     return render_template("report.html", **locals())
 
@@ -375,16 +375,9 @@ def analytics():
     page_title = "Report"
     page_desc = "Analytics"
 
-    # Create connection
-    conn = connect()
-    with conn:
-        print("Getting the sensor readings")
-        farm = Farm([],  conn)
-        # Get readings
-        dht_data = farm.getDHTReading()
-        print(dht_data)
-        feed_data = farm.getFeedReading()
-        print(feed_data)
+    # Get readings
+    dht_data = DhtData.query.order_by(desc('id')).all()
+    print(dht_data)
 
     return render_template("analytics.html", **locals())
 
