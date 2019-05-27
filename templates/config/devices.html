@@ -1,0 +1,69 @@
+{% extends 'layout.html' %}
+{% block body %}
+
+<!-- START card-->
+<div role="tabpanel">
+    <!-- Nav tabs-->
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" href="/config/devices" aria-controls="config" role="tab">Devices</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" href="/config/farms" aria-controls="config" role="tab">Farms</a>
+        </li>
+    </ul>
+</div>
+<div class="card card-default">
+    <div class="card-header">
+        <a href="#newDevice" data-toggle="modal" class="btn btn-warning float-right">
+            <i class="fas fa-plus"></i>
+            Add New Device
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>SN</th>
+                                <th>Model</th>
+                                <th>Serial Number</th>
+                                <th>Date Acquired</th>
+                                <th>...</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for device in devices %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>Model {{ device.model }}</td>
+                                <td>{{ device.serial }}</td>
+                                <td>{{ device.acquired_on }}</td>
+                                <td>
+                                    <a href="#" class="btn btn-primary btn-pill-left">
+                                        <i class="fas fa-pencil"></i>
+                                        Edit
+                                    </a>
+                                    <a href="/settings/delete_rule?id={{device.id}}" onclick="return false;"
+                                        class="btn btn-danger btn-pill-right confirm_delete">
+                                        <i class="fas fa-trash"></i>
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- END card-->
+
+{% endblock %}
+
+{% include 'config/_add_new_device.html' %}

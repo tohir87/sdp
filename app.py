@@ -33,6 +33,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(128))
     phone = db.Column(db.String(128))
     password = db.Column(db.String(128))
+    user_type_id = db.Column(db.SmallInteger(), default=0)
+    farm_name = db.Column(db.String(128))
 
 
 class DhtData(db.Model):
@@ -81,7 +83,23 @@ class Rules(db.Model):
     sensor = db.Column(db.String(255))
     rule_type = db.Column(db.String(255))
     rule_value = db.Column(db.Integer)
-    alert_id = db.Column(db.Integer)
+    alert_id = db.Column(db.Integer, db.ForeignKey('alerts.id'))
+
+class Devices(db.Model):
+    __tablename__ = "devices"
+
+    id = db.Column(db.Integer, primary_key=True)
+    model = db.Column(db.String(255))
+    serial = db.Column(db.String(255))
+    acquired_on = db.Column(db.Date())
+
+class UserDevices(db.Model):
+    __tablename__ = "user_devices"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    device_id = db.Column(db.Integer, db.ForeignKey('devices.id'))
+
 
 
 def connect():
@@ -474,6 +492,57 @@ def createRule():
 
         # redirect back to alert page
         return redirect(url_for('rule'))
+    else:
+        flash("You are not logged in")
+        return redirect(url_for('login'))
+
+@app.route('/config/devices')
+def config_devices():
+    if 'first_name' in session:
+
+        page_title = "Config"
+        page_desc = "Devices"
+
+        # fetch all devices from db
+        devices = Devices.query.all()
+
+        return render_template("config/devices.html", **locals())
+    else:
+        flash("You are not logged in")
+        return redirect(url_for('login'))
+
+@app.route('/config/farms')
+def config_farms():
+    if 'first_name' in session:
+
+        page_title = "Config"
+        page_desc = "Farms"
+
+        # fetch all farms from db
+        farms = User.query.all()
+
+        return render_template("config/farms.html", **locals())
+    else:
+        flash("You are not logged in")
+        return redirect(url_for('login'))
+
+@app.route('/config/new_device', methods=['POST'])
+def config_device_post():
+    if 'first_name' in session:
+        model = request.form['model']
+        serial = request.form['serial']
+        acquired_on = datetime.strptime(request.form['acquired_on'], '%m/%d/%Y').strftime('%Y-%m-%d') 
+
+        new_reading = Devices(model=model,serial=serial,acquired_on=acquired_on)
+
+        # Add new record to db
+        db.session.add(new_reading)
+        db.session.commit()
+
+        flash("Device added successfully")
+        return redirect(url_for('config_devices'))
+        
+        
     else:
         flash("You are not logged in")
         return redirect(url_for('login'))

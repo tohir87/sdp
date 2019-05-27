@@ -1,0 +1,44 @@
+<!-- Modal-->
+<div class="modal fade" id="newDevice" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">New Device</h4>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form class="form-horizontal" method="POST" action="/config/new_device">
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label class="col-xl-3 col-form-label">Model:</label>
+                        <div class="col-xl-9">
+                            <select required name="model" id="model" class="form-control">
+                                <option value="1">Model 1</option>
+                                <option value="2">Model 2</option>
+                                <option value="3">Model 3</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xl-3 col-form-label">Serial:</label>
+                        <div class="col-xl-9">
+                            <input required class="form-control" type="text" placeholder="serial" name="serial">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xl-3 col-form-label">Date Acquired:</label>
+                        <div class="col-xl-9">
+                            <input required class="form-control datepicker" type="text" name="acquired_on">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-warning" type="button" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
