@@ -24,23 +24,19 @@
                 <div class="table-responsive">
                     <table class="table">
                         <tr>
-                            <td>Min. Temperature</td>
-                            <td>{{min_temp}} deg</td>
-                        </tr>
-                        <tr>
-                            <td>Max. Temperature</td>
-                            <td>{{max_temp}} deg</td>
+                            <td>Farm Name</td>
+                            <td>{{farm.farm_name}}</td>
                         </tr>
                         <tr>
                             <th colspan="2">Notification Channels</th>
                         </tr>
                         <tr>
                             <td>Email</td>
-                            <td>{{emergency_email}}</td>
+                            <td>{{farm.email}}</td>
                         </tr>
                         <tr>
                             <td>Phone</td>
-                            <td>{{emergency_phone}}</td>
+                            <td>{{farm.phone}}</td>
                         </tr>
                     </table>
                 </div>
@@ -48,24 +44,15 @@
             <div class="col-lg-6">
                 <form class="form-horizontal" method="POST" action="/processSettings">
                     <div class="form-group">
-                        <label class="sr-only" for="min_temperature">Min. Temperature</label>
-                        <input required class="form-control mb-2" id="min_temperature" name="min_temperature"
-                            type="number" min="0" placeholder="Min Temperature" value="{{min_temp}}">
+                        <label class="sr-only" for="min_temperature">Farm Name</label>
+                        <input required class="form-control mb-2" id="farm_name" name="farm_name" type="text"
+                            placeholder="Farm Name" value="{{farm.farm_name}}">
                     </div>
+
                     <div class="form-group">
-                        <label class="sr-only" for="max_temperature">Max. Temperature</label>
-                        <input required class="form-control mb-2" id="max_temperature" name="max_temperature"
-                            type="number" min="0" placeholder="Max Temperature" value="{{max_temp}}">
-                    </div>
-                    <div class="form-group">
-                        <label class="sr-only" for="emergency_email">Emergency Email</label>
-                        <input required class="form-control mb-2" id="emergency_email" name="emergency_email"
-                            type="email" placeholder="Emergency Email" value="{{emergency_email}}">
-                    </div>
-                    <div class="form-group">
-                        <label class="sr-only" for="emergency_phone">Emergency Phone</label>
-                        <input required class="form-control mb-2" id="emergency_phone" name="emergency_phone"
-                            type="text" placeholder="Emergency Phone" value="{{emergency_phone}}">
+                        <label class="sr-only" for="phone">Emergency Phone</label>
+                        <input required class="form-control mb-2" id="phone" name="phone" type="text"
+                            placeholder="Phone" value="{{session['phone']}}">
                     </div>
                     <div class="form-group">
 

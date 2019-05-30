@@ -8,7 +8,7 @@ from classes.farm import Farm
 import psycopg2
 from flask_login import current_user, LoginManager, login_user, UserMixin
 from flask_mail import Mail, Message
-from sqlalchemy import desc
+from sqlalchemy import desc, update
 from urllib.request import urlopen
 
 app = Flask(__name__)
@@ -303,20 +303,20 @@ def doSetup():
 def doLogin():
     error = None
 
-    # Initialise the Farm class and pass submitted form inputs across
-    farm = Farm(request.form,  connect())
-    # Complete signup
-    userInfo = farm.login()
+    email = request.form['email']
+    password = request.form['password']
 
-    print(userInfo)
+    userInfo = User.query.filter_by(email=email,password=password).first()
 
-    if (len(userInfo) > 0):
+    if (userInfo):
+        print(userInfo)
         # Set session vars
-        session['id'] = userInfo[0][1]
-        session['first_name'] = userInfo[0][2]
-        session['last_name'] = userInfo[0][3]
-        session['email'] = userInfo[0][4]
-        session['phone'] = userInfo[0][5]
+        session['id'] = userInfo.id
+        session['first_name'] = userInfo.first_name
+        session['last_name'] = userInfo.last_name
+        session['email'] = userInfo.email
+        session['phone'] = userInfo.phone
+        session['farm_name'] = userInfo.farm_name
         session['logged_in'] = True
         # redirect to needed page
         return redirect(url_for('home'))
@@ -328,32 +328,19 @@ def doLogin():
 @app.route('/settings')
 def settings():
 
-    # checkLogin()
+    if 'first_name' in session:
+        page_title = "Settings"
+        page_desc = "Available settings"
 
-    page_title = "Settings"
-    page_desc = "Available settings"
+        user_id = session['id']
+        farm = User.query.filter_by(id=user_id).first()
 
-    max_temp = 0
-    min_temp = 0
-    emergency_email = ""
-    emergency_phone = ""
+        return render_template("settings/settings.html", **locals())
 
-    # Create connection
-    conn = connect()
-    with conn:
-        print("Getting the previous setting")
-        farm = Farm([],  conn)
-        # Get settings
-        previousSetting = farm.getSetting()
-
-        if previousSetting:
-            min_temp = previousSetting[0][1]
-            max_temp = previousSetting[0][2]
-            emergency_email = previousSetting[0][3]
-            emergency_phone = previousSetting[0][4]
-
-    return render_template("settings/settings.html", **locals())
-
+    else:
+        flash("You are not logged in")
+        return redirect(url_for('login'))
+    
 
 @app.route('/report')
 def report():
@@ -436,10 +423,16 @@ def rule():
 
 @app.route('/processSettings', methods=['POST'])
 def processSettings():
-    # Initialise the Farm class and pass submitted form inputs across
-    farm = Farm(request.form,  connect())
-    # Complete signup
-    farm.saveSettings()
+    # Get form fields
+    farm_name = request.form['farm_name']
+    phone = request.form['phone']
+    id = session['id']
+
+    # update info in database
+    user = User.query.get(id)
+    user.farm_name = farm_name
+    user.phone = phone
+    db.session.commit()
 
     # redirect back to settings page
     return redirect(url_for('settings'))
@@ -541,8 +534,23 @@ def config_device_post():
 
         flash("Device added successfully")
         return redirect(url_for('config_devices'))
-        
-        
+    else:
+        flash("You are not logged in")
+        return redirect(url_for('login'))
+
+@app.route('/config/farm_device', methods=["POST", "GET"])
+def farmDevices():
+    if 'first_name' in session:
+        user_id = request.args['id']
+
+        devices = []
+        device_count = UserDevices.query.filter_by(user_id=user_id).count()
+
+        if device_count < 0:
+            devices = Devices.query.all()
+
+        return render_template("config/user_devices.html", **locals())
+       
     else:
         flash("You are not logged in")
         return redirect(url_for('login'))
