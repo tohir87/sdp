@@ -126,14 +126,14 @@ def sendNotification(row, deviceId):
     recipient = User.query.filter_by(id=id).first()
 
     print('sending ' + row.message)
-    msg = Message('Alert: ' + row.tag_name, sender='bot@smartfarm.com',
+    msg = Message(recipient.farm_name + ' Alert: ' + row.tag_name, sender='notification@smartfarm.com',
                   recipients=[recipient.email])
     msg.body = row.message
     mail.send(msg)
     url = "https://api.africastalking.com/restless/send?message=" + row.message + \
-        "&username=tbasetest2018&Apikey=ceeabb27657cd6cfb3952dfae8b7943b4975dbee6a5b55fd4819f333bb1100ee&to=" + \
+        "&username=tbasetest2018&Apikey=ceeabb27657cd6cfb3952dfae8b7943b4975dbee6a5b55fd4819f333bb1100ee&to=+" + \
             str(recipient.phone)
-    # urlopen(url)
+    urlopen(url)
     return
 
 
