@@ -147,6 +147,7 @@ def post_reading():
     feed_level = 0 #request.args['feed_level']
     reading_date = datetime.now().strftime('%Y-%m-%d')
     reading_time = datetime.now().strftime('%H:%M:%S')
+    device_id = request.args['device_id']
 
     # Save new sensor readings
     new_reading = DhtData(reading_date=reading_date,reading_time=reading_time,temperature=temperature,humidity=humidity,water_level=water_level,feed_level=feed_level)
@@ -165,9 +166,9 @@ def post_reading():
     if results_exceed.count() > 0:
         for row in results_exceed:
             if row.sensor == 'Temperature' and int(float(request.args['temperature'])) > row.rule_value:
-                sendNotification(row)
+                sendNotification(row, device_id)
             elif row.sensor == 'Humidity' and int(float(request.args['humidity'])) > row.rule_value:
-                sendNotification(row)
+                sendNotification(row, device_id)
 
     results_below = Rules.query.join(Alerts, Alerts.id == Rules.alert_id).add_columns(Rules.sensor, Rules.rule_type, Rules.rule_value, Alerts.message, Alerts.tag_name).filter(Rules.rule_type == rule_type_below)
 
@@ -175,11 +176,11 @@ def post_reading():
     if results_below.count() > 0:
         for row in results_below:
             if row.sensor == 'Water Level' and int(request.args['water_level']) < row.rule_value:
-                sendNotification(row)
+                sendNotification(row, device_id)
             elif row.sensor == 'Humidity' and int(float(request.args['humidity'])) < row.rule_value:
-                sendNotification(row)
+                sendNotification(row, device_id)
             elif row.sensor == 'Temperature' and int(float(request.args['temperature'])) < row.rule_value:
-                sendNotification(row)
+                sendNotification(row, device_id)
 
     return "Ok"
 
