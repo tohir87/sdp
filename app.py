@@ -175,7 +175,7 @@ def post_reading():
     # with results below settings:
     if results_below.count() > 0:
         for row in results_below:
-            if row.sensor == 'Water Level' and int(request.args['water_level']) < row.rule_value:
+            if row.sensor == 'Water Level' and int(request.args['water_level']) == row.rule_value:
                 sendNotification(row, device_id)
             elif row.sensor == 'Humidity' and int(float(request.args['humidity'])) < row.rule_value:
                 sendNotification(row, device_id)
