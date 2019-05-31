@@ -132,7 +132,7 @@ def sendNotification(row, deviceId):
     mail.send(msg)
     url = "https://api.africastalking.com/restless/send?message=" + row.message + \
         "&username=tbasetest2018&Apikey=ceeabb27657cd6cfb3952dfae8b7943b4975dbee6a5b55fd4819f333bb1100ee&to=" + \
-            + str(recipient.phone)
+            str(recipient.phone)
     # urlopen(url)
     return
 
