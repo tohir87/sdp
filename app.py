@@ -141,7 +141,7 @@ def post_reading():
     temperature = request.args['temperature']
     humidity = request.args['humidity']
     water_level = request.args['water_level']
-    feed_level = request.args['feed_level']
+    feed_level = 0 #request.args['feed_level']
     reading_date = datetime.now().strftime('%Y-%m-%d')
     reading_time = datetime.now().strftime('%H:%M:%S')
 
