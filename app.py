@@ -118,18 +118,21 @@ def connect():
             print('Database connection closed.')
 
 
-def sendNotification(row):
+def sendNotification(row, deviceId):
     print(row.rule_type, row.rule_value, row.message)
+
+    # get recipient info with device ID
+    id = deviceId
+    recipient = User.query.filter_by(id=id).first()
 
     print('sending ' + row.message)
     msg = Message('Alert: ' + row.tag_name, sender='bot@smartfarm.com',
-                  recipients=['otcleantech@gmail.com'])
+                  recipients=[recipient.email])
     msg.body = row.message
     mail.send(msg)
     url = "https://api.africastalking.com/restless/send?message=" + row.message + \
         "&username=tbasetest2018&Apikey=ceeabb27657cd6cfb3952dfae8b7943b4975dbee6a5b55fd4819f333bb1100ee&to=" + \
-            "+353894574866" 
-            # + str(session['phone'])
+            + str(recipient.phone)
     # urlopen(url)
     return
 
@@ -161,9 +164,9 @@ def post_reading():
     # with results xceeding settings:
     if results_exceed.count() > 0:
         for row in results_exceed:
-            if row.sensor == 'Temperature' and int(request.args['temperature']) > row.rule_value:
+            if row.sensor == 'Temperature' and int(float(request.args['temperature'])) > row.rule_value:
                 sendNotification(row)
-            elif row.sensor == 'Humidity' and int(request.args['humidity']) > row.rule_value:
+            elif row.sensor == 'Humidity' and int(float(request.args['humidity'])) > row.rule_value:
                 sendNotification(row)
 
     results_below = Rules.query.join(Alerts, Alerts.id == Rules.alert_id).add_columns(Rules.sensor, Rules.rule_type, Rules.rule_value, Alerts.message, Alerts.tag_name).filter(Rules.rule_type == rule_type_below)
@@ -173,9 +176,9 @@ def post_reading():
         for row in results_below:
             if row.sensor == 'Water Level' and int(request.args['water_level']) < row.rule_value:
                 sendNotification(row)
-            elif row.sensor == 'Humidity' and int(request.args['humidity']) < row.rule_value:
+            elif row.sensor == 'Humidity' and int(float(request.args['humidity'])) < row.rule_value:
                 sendNotification(row)
-            elif row.sensor == 'Temperature' and int(request.args['temperature']) < row.rule_value:
+            elif row.sensor == 'Temperature' and int(float(request.args['temperature'])) < row.rule_value:
                 sendNotification(row)
 
     return "Ok"
